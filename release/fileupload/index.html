@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="assets/css/demo.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="assets/css/form-builder.min.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="assets/css/form-render.min.css">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <title>jQuery formBuilder/formRender Demo</title>
+</head>
+<style>
+ul.form_list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.form_list li {
+    float: left;
+}
+
+.form_list li {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+#frmb-0-stage-wrap *{
+background:transparent !important;
+color:#fff  !important;
+}
+</style>
+
+
+<body style="height:1200px">
+	<!-- <label>Background Color</label>
+  	<button id="frmb-0-save" class="btn-primary jscolor {valueElement:'chosen-value', onFineChange:'setbackColor(this)'}">
+		&nbsp;
+	</button>
+	<label>Font Color</label>
+	<button id="frmb-0-save" class="btn-primary jscolor {valueElement:'chosen-value', onFineChange:'setfontColor(this)'}">
+		&nbsp;
+	</button -->
+<ul class="form_list">
+  <li>Form Name :</li>
+</ul>
+Form name:	
+<input class = "New_formname" type="text"></text>
+<button id="save_div">Save</button><br>
+  
+  <div class="content">
+    <div class="build-wrap"></div>
+    <div class="render-wrap"></div>
+    <button id="edit-form">Edit Form</button>
+  </div>
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/form-builder.min.js"></script>
+  <script src="assets/js/form-render.min.js"></script>
+  <script src="assets/js/demo.js"></script>
+  <script src="jscolor.js"></script>
+	<script>
+	$(document).ready(function(){
+		$.post("../scripts/Function.php",{table_name:'fileupload'},function(result){
+			$(".frmb.ui-sortable").html(result[0].contant);
+			//alert(result.length);
+			for(i=0;i<result.length;i++){
+			$(".form_list").append("<li>"+ result[i].Form_name +"</li>");
+			
+			}
+		},'json');
+	
+		$("ul.frmb-control.ui-sortable").append('<li class="icon-Custom_Table ui-sortable-handle icon-autocomplete" label="Custom Table" style="display: list-item;"><span>Custom Table</span></li>');
+		
+		
+		$(document).mousemove(function(event) {
+			$("input.icon-Custom_Table").parent().addClass("Custom_Tableview");
+			$("input.icon-Custom_Table").parent().parent().next().addClass("Custom_Tablesetting");
+			
+			if($("div").hasClass("Custom_appendTrue")==false){
+			$(".prev-holder .Custom_Tableview").append('<table class="table table-striped"><thead><tr class="tr_col_name"><th></th><th>col1</th><th>col2</th><th>col3</th><th>col4</th></tr></thead><tbody class="tr_row_name"><tr ng-repeat="item in smartTableData" class="ng-scope"><td class="ng-binding">Row1</td><td class="ng-binding"><input class="Table_inval form-control" ></input></td><td class="ng-binding"><input class="Table_inval form-control"></input></td><td class="ng-binding"><input class="Table_inval form-control"></input></td><td class="ng-binding"><input class="Table_inval form-control"></input></td></tr><tr ng-repeat="item in smartTableData" class="ng-scope"><td class="ng-binding">Row2</td><td class="ng-binding"><input class="Table_inval form-control"></input></td><td class="ng-binding"><input class="Table_inval form-control"></input></td><td class="ng-binding"><input class="Table_inval form-control"></input></td><td class="ng-binding"><input class="Table_inval form-control"></input></td></tr></tbody></table>');
+			$(".Custom_Tablesetting .form-elements").append('<div class="form-group Cols_table"><label for="className-frmb-0-fld-1">Cols</label> <div class="input-wrap"><select class="col_count form-control"><option value="0"></option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option></select></div></div><div class="form-group Rows_table"><label for="className-frmb-0-fld-1">Rows</label> <div class="input-wrap"><select class="row_count  form-control"><option value="0" ></option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option></select></div></div><hr>');
+			$(".Custom_Tablesetting .form-elements").append('<div>Table rows name<hr><div class="contant_row"></div></div><hr><div>Table cols name<hr><div class="contant_col"></div></div><hr>');
+
+
+			$("input.icon-Custom_Table").parent().addClass("Custom_appendTrue");
+			$("input.icon-Custom_Table").parent().parent().next().addClass("Custom_appendTrue");
+			$("input.icon-Custom_Table").remove();
+			
+			///settingpage cls
+			$(".Custom_Tablesetting div.description-wrap").remove();
+			$(".Custom_Tablesetting div.className-wrap").remove();
+			$(".Custom_Tablesetting div.name-wrap").remove();
+			$(".Custom_Tablesetting div.value-wrap").remove();
+			$(".Custom_Tablesetting div.access-wrap").remove();
+			
+			
+			   var row_count =  parseInt($(".col_count").val());
+			   for (i=0;i<row_count;++i){
+			   s=i+1;
+			   $(".contant_col").append("<div class='form-group'><div><label for='className-frmb-0-fld-1'> Col"+ s +"</label><div class='input-wrap' style='width: 30%;'><input class = 'form-control input_col"+ s +"' value='Col"+s+"'  onchange='Col_name_chang($(this), "+ s +")' ></input></div></div><div><label for='className-frmb-0-fld-1'>Type</label><div class='input-wrap' style='width: 30%;'><select class = 'form-control type_col"+ s +"' name='row_count'><option value='Int'>Int</option><option value='Text' selected>Text</option></select></div></div></div>");
+			   }
+			   
+			   var row_count =  parseInt($(".row_count").val());
+			   for (i=0;i<row_count;++i){
+			   s=i+1;
+			   $(".contant_row").append("<div class='form-group'><label for='className-frmb-0-fld-1'> Row "+ s +"</label><div class='input-wrap'><input class = 'form-control input_row"+ s +"' type='input' value='Row"+s+"' onchange='Row_name_chang($(this), "+ s +")'></input></div></div>");
+			   }
+			
+			
+			
+			
+			
+			$(".col_count").change(function(){
+			   $(".contant_col").empty();
+			   var col_count =  parseInt($(this).val());
+			   for (i=0;i<col_count;++i){
+			   s=i+1;
+			   $(".contant_col").append("<div class='form-group'><div><label for='className-frmb-0-fld-1'> Col"+ s +"</label><div class='input-wrap' style='width: 30%;'><input class = 'form-control input_col"+ s +"' value='Col"+s+"' onchange='Col_name_chang($(this), "+ s +")'></input></div></div><div><label for='className-frmb-0-fld-1'>Type</label><div class='input-wrap' style='width: 30%;'><select class = 'form-control type_col"+ s +"' name='row_count'><option value='Int'>Int</option><option value='Text' selected>Text</option></select></div></div></div>");
+			   }
+			   
+			   
+			   table_chang_view();
+			   
+			   
+			});
+			
+			
+			$(".row_count").change(function(){
+			$(".contant_row").empty();
+			   var row_count =  parseInt($(this).val());
+			   for (i=0;i<row_count;++i){
+			   s=i+1;
+			   $(".contant_row").append("<div class='form-group'><label for='className-frmb-0-fld-1'> Row "+ s +"</label><div class='input-wrap'><input class = 'form-control input_row"+ s +"' type='input' value='Row"+s+"' onchange='Row_name_chang($(this), "+ s +")'></input></div></div>");
+			   }
+			   
+			   table_chang_view();
+			   
+			});
+			
+			
+			}
+		});
+		
+	});
+
+
+function table_chang_view(){
+   var col_count =  parseInt($(".col_count").val());
+   var row_count =  parseInt($(".row_count").val());
+   
+   $(".tr_col_name").empty();
+   $(".tr_col_name").append("<th></th>");
+   for (i=0;i<col_count;++i){
+	   kk=i+1;
+	   $(".tr_col_name").append("<th>Col"+kk+"</th>");
+   }
+   
+   $(".tr_row_name").empty();
+   var str_html_table;
+   for (j=0;j<row_count;++j){
+	   kk=j+1;
+	   str_html_table =str_html_table + '<tr ng-repeat="item in smartTableData" class="ng-scope"><td class="ng-binding">Row'+kk+'</td>';
+	   for (i=0;i<col_count;++i){
+			str_html_table =str_html_table + '<td class="ng-binding"><input class="Table_inval form-control" ></input></td>';
+	   }
+	   str_html_table =str_html_table + '</tr>';
+   }
+   $(".tr_row_name").append(str_html_table);
+}
+
+function Row_name_chang(obj, id){
+	$(".tr_row_name tr:nth-child("+id+") td:nth-child(1)").html(obj.val());
+}
+
+function Col_name_chang(obj, id){
+	s=id+1;
+	$(".tr_col_name th:nth-child("+s+")").html(obj.val());
+}
+
+
+
+	
+	$("#save_div").click(function(){
+	
+	var form_name = $(".New_formname").val();
+	if(form_name==""){
+	alert("error: Form name input!");
+	
+	}else{
+		//$(".New_formname").val()="";
+		$(".form_list").append("<li>"+ form_name +"</li>");
+		var str_html = $(".frmb.ui-sortable").html();
+		str_html = str_html.replace(/frmb-0-fld-/g, "frmb-0-fld-s");
+		
+		var str_contant='';
+		
+		
+		$(".frmb.ui-sortable").find(".prev-holder").each(function() {
+			str_contant = str_contant + $(this).html();
+		});
+		
+		$.post("../scripts/Update.php",{formname:form_name,s_contant:str_contant,fileupload:str_html,s_contant:str_contant},function(result){},'json');
+	}	
+	
+	});
+	
+	
+	function setbackColor(picker) {
+		 $("#frmb-0-stage-wrap div").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap li").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap label").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap a").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap bottom").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap text").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap select").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap input").css("background-color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap textarea").css("background-color", '#' + picker.toString()+" !important");
+	}
+	
+	function setfontColor(picker) {
+		 $("#frmb-0-stage-wrap div").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap li").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap label").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap a").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap bottom").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap text").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap select").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap input").css("color", '#' + picker.toString()+" !important");
+		 $("#frmb-0-stage-wrap textarea").css("color", '#' + picker.toString()+" !important");
+	}
+	
+	</script>
+</body>
+</html>
